@@ -1,6 +1,6 @@
 # Guagua
 
-Guagua is a PHP implementation of a [command bus](https://github.com/hawara-es/guagua#command-bus), a query bus and an event bus.
+Guagua is a PHP implementation of a [command bus](https://github.com/hawara-es/guagua#command-bus), a [query bus](https://github.com/hawara-es/guagua#query-bus) and an event bus.
 
 > **Note**: This software is still in an development stage. As it is still incomplete, no production version has been yet released. If you are interested in it, please follow the [milestone for the v1.0.0](https://github.com/hawara-es/guagua/milestone/1).
 
