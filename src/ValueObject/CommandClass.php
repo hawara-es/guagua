@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Guagua\ValueObject;
 
-use Guagua\ValueObject\Exception\CommandClassIsNotValidException;
 use Guagua\Command\Definition\CommandInterface;
 use Guagua\ValueObject\Definition\ValueObjectAbstract;
+use Guagua\ValueObject\Exception\CommandClassIsNotValidException;
 
 class CommandClass extends ValueObjectAbstract
 {
