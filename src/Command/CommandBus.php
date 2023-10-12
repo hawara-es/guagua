@@ -22,6 +22,7 @@ class CommandBus implements CommandBusInterface
     {
         $commandHandlerClass = $this->mapper->get($command->getCommandClass());
         $commandHandler = $this->container->get($commandHandlerClass->get());
+
         $commandHandler->__invoke($command);
     }
 }
