@@ -1,5 +1,73 @@
 # Guagua
 
+Guagua is a PHP implementation of a command, query and event buses.
+
+## Command bus
+
+### Commands
+
+To use Guagua's **command bus** it in your application, first define your commands by inheriting `CommandInterface`:
+
+```php
+class DeleteUserCommand extends \Guagua\Command\Definition\CommandInterface
+{
+    public readonly string $id;
+}
+```
+
+Remember to define your commands as data carriers without behaviour.
+
+### Command handlers
+
+Then create a handler for each command by extending `CommandHandlerInterface` and implementing the corresponding behaviour in its `__invoke` method.
+
+```php
+class DeleteUserCommandHandler extends \Guagua\Command\Definition\CommandHandlerInterface
+{
+    /** @param  DeleteUserCommand  $argument */
+    public function __invoke($argument): void
+    {
+        User::delete($argument->id);
+    }
+}
+```
+
+Generally speaking, this will be the unique public method of your command handlers.
+
+### Command mapper
+
+Extending the `CommandMapper` is an easy way to maintain a list of all the relations between your command and their handlers:
+
+```php
+class MyCommandMapper extends \Guagua\Command\CommandMapper
+{
+    public function __construct()
+    {
+        $maps = [
+            DeleteUserCommand::class => DeleteUserCommandHandler::class,
+        ];
+
+        parent::__construct($maps);
+    }
+}
+```
+
+### Instancer
+
+Finally, you can easily make the instancer use your mapper every time it needs a `CommandMapperInstancer`.
+
+```php
+$solver = new Guagua\Instancer\ImplementationSolver([
+    Guagua\Command\Definition\CommandMapperInstancer => MyCommandMapper::class,
+]);
+
+$instancer = new Guagua\Instancer\Instancer($solver);
+
+// Now you can use the instancer to get a command bus that knows about your commands
+$commandBus = $instancer->get(Guagua\Command\Definition\CommandBusInterface::class);
+$commandBus->dispatch(new DeleteUserCommand(1));
+```
+
 ### Via GitHub (recommended for development)
 
 If instead you want to modify this package itself (for instance, to send a pull request), you are encouraged to clone this repository using Git.
