@@ -7,13 +7,13 @@ namespace Guagua\Command;
 use Guagua\Command\Definition\CommandBusInterface;
 use Guagua\Command\Definition\CommandInterface;
 use Guagua\Command\Definition\CommandMapperInterface;
-use Guagua\Container\CommandHandlerContainer;
+use Guagua\Container\Definition\CommandHandlerContainerInterface;
 
 class CommandBus implements CommandBusInterface
 {
     public function __construct(
         private CommandMapperInterface $mapper,
-        private CommandHandlerContainer $container
+        private CommandHandlerContainerInterface $container
     ) {
         //
     }

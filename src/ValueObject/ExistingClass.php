@@ -13,7 +13,7 @@ class ExistingClass extends ValueObjectAbstract
         private string $class
     ) {
         if (! class_exists($class)) {
-            throw new ExistingClassIsNotValidException;
+            throw new ExistingClassIsNotValidException("The class ($class) is not valid");
         }
     }
 

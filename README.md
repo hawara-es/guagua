@@ -23,7 +23,12 @@ The [PsySH](https://psysh.org) debugger is installed as a Composer dependency, w
 vendor/bin/psysh
 ```
 
-The session will autoload the project namespaces, so you can directly run `new Guagua\Command\CommandBus` without even adding a **use** statement.
+The session will autoload the project namespaces, so you can very rapidly start having fun:
+
+```php
+$instancer = new Guagua\Instancer\Instancer;
+$instancer->get(Guagua\Command\CommandBus::class);
+```
 
 ## Run the tests
 

@@ -14,18 +14,13 @@ class ImplementationSolver implements ImplementationSolverInterface
 {
     private array $implementations = [];
 
-    public function __construct(array $implementations = [])
+    public function __construct(array $implementations = [], bool $loadDefaults = true)
     {
-        foreach ($implementations as $interface => $class) {
-            $interface = new ExistingInterface($interface);
-            $class = new ExistingClass($class);
-
-            if (! in_array($interface->get(), class_implements($class->get()))) {
-                throw new ClassDoesNotImplementTheInterfaceException;
-            }
-
-            $this->implementations[$interface->get()] = $class;
+        if ($loadDefaults) {
+            $this->load(Implementations::get());
         }
+
+        $this->load($implementations);
     }
 
     public function get(ExistingInterface|string $interface): ExistingClass
@@ -39,5 +34,19 @@ class ImplementationSolver implements ImplementationSolverInterface
         }
 
         return $this->implementations[$interface->get()];
+    }
+
+    private function load(array $implementations = []): void
+    {
+        foreach ($implementations as $interface => $class) {
+            $interface = new ExistingInterface($interface);
+            $class = new ExistingClass($class);
+
+            if (! in_array($interface->get(), class_implements($class->get()))) {
+                throw new ClassDoesNotImplementTheInterfaceException;
+            }
+
+            $this->implementations[$interface->get()] = $class;
+        }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guagua\Instancer;
 
+use Guagua\Instancer\Definition\ImplementationSolverInterface;
 use Guagua\Instancer\Definition\InstancerInterface;
 use Guagua\Instancer\Exception\DependencyCouldNotBeInstancedException;
 use Guagua\ValueObject\ExistingClass;
@@ -14,12 +15,10 @@ class Instancer implements InstancerInterface
     private ImplementationSolver $solver;
 
     public function __construct(
-        ImplementationSolver $solver = null
+        ImplementationSolverInterface $solver = null
     ) {
         if (! $solver) {
-            $solver = new ImplementationSolver([
-                InstancerInterface::class => Instancer::class,
-            ]);
+            $solver = new ImplementationSolver();
         }
 
         $this->solver = $solver;

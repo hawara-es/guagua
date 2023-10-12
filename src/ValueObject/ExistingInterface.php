@@ -13,7 +13,7 @@ class ExistingInterface extends ValueObjectAbstract
         private string $interface
     ) {
         if (! interface_exists($interface)) {
-            throw new ExistingInterfaceIsNotValidException;
+            throw new ExistingInterfaceIsNotValidException("The interface ($interface) is not valid");
         }
     }
 

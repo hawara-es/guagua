@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Guagua\Container;
 
 use Guagua\Command\Definition\CommandHandlerInterface;
+use Guagua\Container\Definition\CommandHandlerContainerInterface;
 use Guagua\Container\Exception\ContainerException;
 use Guagua\Container\Exception\NotFoundException;
 use Guagua\Instancer\Definition\InstancerInterface;
 use Guagua\ValueObject\CommandHandlerClass;
-use Psr\Container\ContainerInterface;
 
-class CommandHandlerContainer implements ContainerInterface
+class CommandHandlerContainer implements CommandHandlerContainerInterface
 {
     public function __construct(
         private InstancerInterface $instancer
