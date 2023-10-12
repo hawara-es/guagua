@@ -54,13 +54,66 @@ class MyCommandMapper extends \Guagua\Command\CommandMapper
 }
 ```
 
-### Instancer
+## Query bus
 
-Finally, you can easily make the [Instancer](src/Instancer/Instancer.php) use your mapper every time it needs a [CommandMapperInterface](src/Command/Definition/CommandMapperInterface.php):
+### Queries
+
+Similarly, to use Guagua's **query bus** it in your application, first define your queries by inheriting [QueryInterface](src/Query/Definition/QueryInterface.php):
+
+```php
+class GetUserQuery extends \Guagua\Query\Definition\QueryInterface
+{
+    public readonly string $id;
+}
+```
+
+As with commands, remember to define your queries as data carriers without behaviour.
+
+### Query handlers
+
+Then create a handler for each query by extending [QueryHandlerInterface](src/Query/Definition/QueryHandlerInterface.php) and implementing the corresponding behaviour in its `__invoke` method.
+
+```php
+class GetUserQueryHandler extends \Guagua\Query\Definition\QueryHandlerInterface
+{
+    /** @param  GetUserQuery  $argument */
+    public function __invoke($argument): QueryResponseInterface;
+    {
+        return new QueryResponse(
+            User::get($argument->id)
+        );
+    }
+}
+```
+
+Pay attention to the return value of the method, as the main difference with the command bus is that in this case a response is mandatory.
+
+### Query mapper
+
+Extending the [QueryMapper](src/Query/QueryMapper.php) is an easy way to maintain a list of all the relations between your query and their handlers:
+
+```php
+class MyQueryMapper extends \Guagua\Query\QueryMapper
+{
+    public function __construct()
+    {
+        $maps = [
+            GetUserQuery::class => GetUserQueryHandler::class,
+        ];
+
+        parent::__construct($maps);
+    }
+}
+```
+
+## Instancer
+
+Finally, you can easily make the [Instancer](src/Instancer/Instancer.php) use your mappers every time it needs a [CommandMapperInterface](src/Command/Definition/CommandMapperInterface.php), or a [QueryMapperInterface](src/Query/Definition/QueryMapperInterface.php):
 
 ```php
 $solver = new Guagua\Instancer\ImplementationSolver([
     Guagua\Command\Definition\CommandMapperInstancer => MyCommandMapper::class,
+    Guagua\Query\Definition\QueryMapperInstancer => MyQueryMapper::class,
 ]);
 
 $instancer = new Guagua\Instancer\Instancer($solver);
@@ -68,6 +121,10 @@ $instancer = new Guagua\Instancer\Instancer($solver);
 // Now you can use the instancer to get a command bus that knows about your commands
 $commandBus = $instancer->get(Guagua\Command\Definition\CommandBusInterface::class);
 $commandBus->dispatch(new DeleteUserCommand(1));
+
+// and you can also use it to get a query bus that knows about your queries
+$queryBus = $instancer->get(Guagua\Query\Definition\QueryBusInterface::class);
+$queryBus->ask(new GetUserCommand(1));
 ```
 
 ### Via GitHub (recommended for development)

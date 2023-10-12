@@ -14,6 +14,8 @@ class Implementations
             \Guagua\Container\Definition\CommandHandlerContainerInterface::class => \Guagua\Container\CommandHandlerContainer::class,
             \Guagua\Instancer\Definition\ImplementationSolverInterface::class => \Guagua\Instancer\ImplementationSolver::class,
             \Guagua\Instancer\Definition\InstancerInterface::class => \Guagua\Instancer\Instancer::class,
+            \Guagua\Query\Definition\QueryBusInterface::class => \Guagua\Query\QueryBus::class,
+            \Guagua\Query\Definition\QueryMapperInterface::class => \Guagua\Query\QueryMapper::class,
         ];
     }
 }
