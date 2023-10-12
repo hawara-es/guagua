@@ -36,7 +36,7 @@ class Instancer implements InstancerInterface
         $instance = $reflection->newInstanceArgs($parameters);
 
         if (! is_object($instance)) {
-            throw new DependencyCouldNotBeInstancedException;
+            throw new DependencyCouldNotBeInstancedException('The instancer expected an object but obtained something else');
         }
 
         return $instance;
@@ -59,7 +59,7 @@ class Instancer implements InstancerInterface
         try {
             return new ExistingClass($dependency);
         } catch (\Exception $e) {
-            throw new DependencyCouldNotBeInstancedException;
+            throw new DependencyCouldNotBeInstancedException($e->getMessage());
         }
     }
 
