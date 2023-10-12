@@ -6,7 +6,7 @@ Guagua is a PHP implementation of a command, query and event buses.
 
 ### Commands
 
-To use Guagua's **command bus** it in your application, first define your commands by inheriting `CommandInterface`:
+To use Guagua's **command bus** it in your application, first define your commands by inheriting [CommandInterface](src/Command/Definition/CommandInterface.php):
 
 ```php
 class DeleteUserCommand extends \Guagua\Command\Definition\CommandInterface
@@ -19,7 +19,7 @@ Remember to define your commands as data carriers without behaviour.
 
 ### Command handlers
 
-Then create a handler for each command by extending `CommandHandlerInterface` and implementing the corresponding behaviour in its `__invoke` method.
+Then create a handler for each command by extending [CommandHandlerInterface](src/Command/Definition/CommandHandlerInterface.php) and implementing the corresponding behaviour in its `__invoke` method.
 
 ```php
 class DeleteUserCommandHandler extends \Guagua\Command\Definition\CommandHandlerInterface
@@ -36,7 +36,7 @@ Generally speaking, this will be the unique public method of your command handle
 
 ### Command mapper
 
-Extending the `CommandMapper` is an easy way to maintain a list of all the relations between your command and their handlers:
+Extending the [CommandMapper](src/Command/CommandMapper.php) is an easy way to maintain a list of all the relations between your command and their handlers:
 
 ```php
 class MyCommandMapper extends \Guagua\Command\CommandMapper
@@ -54,7 +54,7 @@ class MyCommandMapper extends \Guagua\Command\CommandMapper
 
 ### Instancer
 
-Finally, you can easily make the instancer use your mapper every time it needs a `CommandMapperInstancer`.
+Finally, you can easily make the [Instancer](src/Instancer/Instancer.php) use your mapper every time it needs a [CommandMapperInterface](src/Command/Definition/CommandMapperInterface.php):
 
 ```php
 $solver = new Guagua\Instancer\ImplementationSolver([
@@ -112,3 +112,4 @@ The [Pint](https://laravel.com/docs/10.x/pint) code style fixer has been set up 
 
 ```bash
 vendor/bin/pint
+```
