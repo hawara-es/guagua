@@ -14,11 +14,11 @@ class CommandHandlerClass extends ValueObjectAbstract
         private string $handler
     ) {
         if (! class_exists($handler)) {
-            throw new CommandHandlerClassIsNotValidException;
+            throw new CommandHandlerClassIsNotValidException("The command handler ($handler) is not valid");
         }
 
         if (! array_key_exists(CommandHandlerInterface::class, class_implements($handler))) {
-            throw new CommandHandlerClassIsNotValidException;
+            throw new CommandHandlerClassIsNotValidException("The command handler ($handler) does not implement the command handler interface");
         }
     }
 

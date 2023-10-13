@@ -14,11 +14,11 @@ class QueryHandlerClass extends ValueObjectAbstract
         private string $handler
     ) {
         if (! class_exists($handler)) {
-            throw new QueryHandlerClassIsNotValidException;
+            throw new QueryHandlerClassIsNotValidException("The query handler ($handler) is not valid");
         }
 
         if (! array_key_exists(QueryHandlerInterface::class, class_implements($handler))) {
-            throw new QueryHandlerClassIsNotValidException;
+            throw new QueryHandlerClassIsNotValidException("The query handler ($handler) does not implement the query handler interface");
         }
     }
 

@@ -14,11 +14,11 @@ class CommandClass extends ValueObjectAbstract
         private string $command
     ) {
         if (! class_exists($command)) {
-            throw new CommandClassIsNotValidException;
+            throw new CommandClassIsNotValidException("The command ($command) is not valid");
         }
 
         if (! array_key_exists(CommandInterface::class, class_implements($command))) {
-            throw new CommandClassIsNotValidException;
+            throw new CommandClassIsNotValidException("The command ($command) does not implement the command interface");
         }
     }
 

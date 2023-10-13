@@ -14,11 +14,11 @@ class QueryClass extends ValueObjectAbstract
         private string $query
     ) {
         if (! class_exists($query)) {
-            throw new QueryClassIsNotValidException;
+            throw new QueryClassIsNotValidException("The query ($query) is not valid");
         }
 
         if (! array_key_exists(QueryInterface::class, class_implements($query))) {
-            throw new QueryClassIsNotValidException;
+            throw new QueryClassIsNotValidException("The query ($query) does not implement the query interface");
         }
     }
 

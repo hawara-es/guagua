@@ -19,7 +19,8 @@
         }
     ],
     "require": {
-        "psr/container": "^2.0"
+        "psr/container": "^2.0",
+        "ramsey/uuid": "^4.7"
     },
     "require-dev": {
         "pestphp/pest": "^2.23",
