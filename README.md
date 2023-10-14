@@ -1,6 +1,6 @@
 # Guagua
 
-Guagua is a PHP implementation of a [command bus](https://github.com/hawara-es/guagua#command-bus), a [query bus](https://github.com/hawara-es/guagua#query-bus) and an event bus.
+Guagua is a PHP implementation of a [command bus](#command-bus), a [query bus](#query-bus) and an [event bus](#event-bus).
 
 > **Note**: This software is still in an development stage. As it is still incomplete, no production version has been yet released. If you are interested in it, please follow the [milestone for the v1.0.0](https://github.com/hawara-es/guagua/milestone/1).
 
@@ -8,40 +8,60 @@ Guagua is a PHP implementation of a [command bus](https://github.com/hawara-es/g
 
 ### Commands
 
-To use Guagua's **command bus** it in your application, first define your commands by inheriting [CommandInterface](src/Command/Definition/CommandInterface.php):
+Create a command by implementing Guagua's command interface.
 
 ```php
-class DeleteUserCommand extends \Guagua\Command\Definition\CommandInterface
+use Guagua\Command\Definition\CommandInterface;
+
+class DeleteUserCommand implements CommandInterface
 {
-    public readonly string $id;
-}
-```
-
-Remember to define your commands as data carriers without behaviour.
-
-### Command handlers
-
-Then create a handler for each command by extending [CommandHandlerInterface](src/Command/Definition/CommandHandlerInterface.php) and implementing the corresponding behaviour in its `__invoke` method.
-
-```php
-class DeleteUserCommandHandler extends \Guagua\Command\Definition\CommandHandlerInterface
-{
-    /** @param  DeleteUserCommand  $argument */
-    public function __invoke($argument): void
-    {
-        User::delete($argument->id);
+    public function __construct(
+        public readonly string $id
+    ) {
+        //
     }
 }
 ```
 
-Generally speaking, this will be the unique public method of your command handlers.
+Remember to define your commands as immutable data carriers without behaviour.
+
+> **See**: [CommandInterface.php](src/Command/Definition/CommandInterface.php).
+
+### Command handlers
+
+Create a command handler by implementing Guagua's command handler interface and implementing the corresponding behaviour in an **invoke** method, which must receive the command as its **argument**.
+
+```php
+use Guagua\Command\Definition\CommandHandlerInterface;
+
+class DeleteUserCommandHandler implements CommandHandlerInterface
+{
+    public function __construct(
+        private UserRepository $repository
+    ) {
+        //
+    }
+
+    /** @param  DeleteUserCommand  $argument */
+    public function __invoke($argument): void
+    {
+        $this->repository->delete($argument->id);
+    }
+}
+```
+
+Generally speaking, this will be the unique public method of your command handlers, along with the constructor which you are encouraged to use in order to inject its dependencies.
+
+> **See**: [CommandHandlerInterface.php](src/Command/Definition/CommandHandlerInterface.php)
 
 ### Command mapper
 
-Extending the [CommandMapper](src/Command/CommandMapper.php) is an easy way to maintain a list of all the relations between your command and their handlers:
+Maintain a list of all the relationships between your commands and their handlers by extending Guagua's command mapper.
 
 ```php
-class MyCommandMapper extends \Guagua\Command\CommandMapper
+use Guagua\Command\CommandMapper;
+
+class MyCommandMapper extends CommandMapper
 {
     public function __construct()
     {
@@ -54,46 +74,87 @@ class MyCommandMapper extends \Guagua\Command\CommandMapper
 }
 ```
 
+> **See**: [CommandMapper.php](src/Command/CommandMapper.php)
+
 ## Query bus
 
 ### Queries
 
-Similarly, to use Guagua's **query bus** it in your application, first define your queries by inheriting [QueryInterface](src/Query/Definition/QueryInterface.php):
+Create a query by implementing Guagua's query interface.
 
 ```php
-class GetUserQuery extends \Guagua\Query\Definition\QueryInterface
+use Guagua\Query\Definition\QueryInterface;
+
+class GetUserQuery implements QueryInterface
 {
-    public readonly string $id;
+    public function __construct(
+        public readonly string $id
+    ) {
+        //
+    }
 }
 ```
 
 As with commands, remember to define your queries as data carriers without behaviour.
 
-### Query handlers
+> **See**: [QueryInterface.php](src/Query/Definition/QueryInterface.php)
 
-Then create a handler for each query by extending [QueryHandlerInterface](src/Query/Definition/QueryHandlerInterface.php) and implementing the corresponding behaviour in its `__invoke` method.
+### Query responses
+
+Create a query response by implementing Guagua's query response interface.
 
 ```php
-class GetUserQueryHandler extends \Guagua\Query\Definition\QueryHandlerInterface
+use Guagua\Query\Definition\QueryResponseInterface;
+
+class GetUserQueryResponse implements QueryResponseInterface
 {
-    /** @param  GetUserQuery  $argument */
-    public function __invoke($argument): QueryResponseInterface;
-    {
-        return new QueryResponse(
-            User::get($argument->id)
-        );
+    public function __construct(
+        public readonly ?User $user = null
+    ) {
+        //
     }
 }
 ```
 
-Pay attention to the return value of the method, as the main difference with the command bus is that in this case a response is mandatory.
+> **See**: [QueryResponseInterface.php](src/Query/Definition/QueryResponseInterface.php)
+
+### Query handlers
+
+Create a query handler by implementing Guagua's query handler interface and implementing the corresponding behaviour in an **invoke** method, which must receive the query as its **argument**.
+
+```php
+use Guagua\Query\Definition\QueryHandlerInterface;
+
+class GetUserQueryHandler implements QueryHandlerInterface
+{
+    public function __construct(
+        private UserRepository $repository
+    ) {
+        //
+    }
+
+    /** @param  GetUserQuery  $argument */
+    public function __invoke($argument): QueryResponseInterface;
+    {
+        $user = $this->repository->find($argument->id);
+
+        return new QueryResponse($user);
+    }
+}
+```
+
+Pay attention to the return value of the method, as the main difference with the command bus is that in this case a response is mandatory and it has to implement query response interface.
+
+> **See**: [QueryHandlerInterface.php](src/Query/Definition/QueryHandlerInterface.php)
 
 ### Query mapper
 
-Extending the [QueryMapper](src/Query/QueryMapper.php) is an easy way to maintain a list of all the relations between your query and their handlers:
+Maintain a list of all the relationships between your queries and their handlers by extending Guagua's query mapper.
 
 ```php
-class MyQueryMapper extends \Guagua\Query\QueryMapper
+use Guagua\Query\QueryMapper;
+
+class MyQueryMapper extends QueryMapper
 {
     public function __construct()
     {
@@ -106,26 +167,130 @@ class MyQueryMapper extends \Guagua\Query\QueryMapper
 }
 ```
 
-## Instancer
+> **See**: [QueryMapper.php](src/Query/QueryMapper.php)
 
-Finally, you can easily make the [Instancer](src/Instancer/Instancer.php) use your mappers every time it needs a [CommandMapperInterface](src/Command/Definition/CommandMapperInterface.php), or a [QueryMapperInterface](src/Query/Definition/QueryMapperInterface.php):
+## Event Bus
+
+### Events
+
+Create an event by implementing Guagua's event interface.
 
 ```php
-$solver = new Guagua\Instancer\ImplementationSolver([
-    Guagua\Command\Definition\CommandMapperInstancer => MyCommandMapper::class,
-    Guagua\Query\Definition\QueryMapperInstancer => MyQueryMapper::class,
+use Guagua\Event\Definition\EventInterface;
+
+class UserCreatedEvent implements EventInterface
+{
+    public function __construct(
+        public readonly string $userId
+    ) {
+        //
+    }
+}
+```
+
+As with commands and queries, remember to define your events as data carriers without behaviour.
+
+> **See**: [EventInterface.php](src/Event/Definition/EventInterface.php)
+
+### Event Listeners
+
+Create an event listener by implementing Guagua's event listener interface and implementing the corresponding behaviour in an **invoke** method, which must receive the event as its **argument**.
+
+```php
+use Guagua\Event\Definition\EventListenerInterface;
+
+class WriteLogOnUserCreatedEvent implements EventListenerInterface
+{
+    public function __construct(
+        private LogWriter $logger
+    ) {
+        //
+    }
+
+    public function __invoke(UserCreatedEvent $event): void
+    {
+        $this->logger->write('A new user has just been created: '.$event->userId);
+    }
+}
+```
+
+> **See**: [EventListenerInterface.php](src/Event/Definition/EventListenerInterface.php)
+
+### Event mapper
+
+Maintain a list of all the relationships between your events and their listeners by extending Guagua's event mapper.
+
+```php
+use Guagua\Event\EventMapper;
+
+class MyEventMapper extends EventMapper
+{
+    public function __construct()
+    {
+        $maps = [
+            UserCreatedEvent::class => [
+                WriteLogOnUserCreatedEvent::class,
+                OtherActionOnUserCreatedEvent::class,
+            ],
+        ];
+
+        parent::__construct($maps);
+    }
+}
+```
+
+> **See**: [EventMapper.php](src/Event/EventMapper.php)
+
+## Instancer
+
+Finally, you can easily make the instancer use your mappers every time a service needs a command mapper, a query mapper or an event mapper by initializing it with your own solver.
+
+```php
+use Guagua\Instancer\ImplementationSolver;
+use Guagua\Command\Definition\CommandMapperInterface;
+use Guagua\Query\Definition\QueryMapperInterface;
+use Guagua\Event\Definition\EventMapperInterface;
+
+$solver = new ImplementationSolver([
+    CommandMapperInterface::class => MyCommandMapper::class,
+    QueryMapperInterface::class => MyQueryMapper::class,
+    EventMapperInterface::class => MyEventMapper::class,
 ]);
 
 $instancer = new Guagua\Instancer\Instancer($solver);
-
-// Now you can use the instancer to get a command bus that knows about your commands
-$commandBus = $instancer->get(Guagua\Command\Definition\CommandBusInterface::class);
-$commandBus->dispatch(new DeleteUserCommand(1));
-
-// and you can also use it to get a query bus that knows about your queries
-$queryBus = $instancer->get(Guagua\Query\Definition\QueryBusInterface::class);
-$queryBus->ask(new GetUserCommand(1));
 ```
+
+Now you can use the instancer to get a command bus that knows about your commands and their handlers.
+
+```php
+use Guagua\Command\Definition\CommandBusInterface;
+
+$command = new DeleteUserCommand('1915d46b-e8a9-4da3-99cd-4a313c2b7b6f');
+$commandBus = $instancer->get(CommandBusInterface::class);
+$commandBus->dispatch($command);
+```
+
+Similarly, you can also use it to get a query bus that knows about your queries and their handlers.
+
+```php
+use Guagua\Query\Definition\QueryBusInterface;
+
+$query = new GetUserQuery('1915d46b-e8a9-4da3-99cd-4a313c2b7b6f');
+$queryBus = $instancer->get(QueryBusInterface::class);
+$user = $queryBus->ask($query);
+```
+
+Finally, you can use it to get an event bus that knows about your events and their listeners.
+
+```php
+use Guagua\Event\Definition\EventBusInterface;
+
+$event = new NewUserCreatedEvent('1915d46b-e8a9-4da3-99cd-4a313c2b7b6f');
+$eventBus = $instancer->get(EventBusInterface::class);
+$eventBus->publish($event);
+```
+
+> **See**: [Instancer.php](src/Instancer/Instancer.php)
 
 ### Via GitHub (recommended for development)
 

@@ -20,7 +20,7 @@ class CommandBus implements CommandBusInterface
 
     public function dispatch(CommandInterface $command): void
     {
-        $commandHandlerClass = $this->mapper->get($command->getCommandClass());
+        $commandHandlerClass = $this->mapper->get($command::class);
         $commandHandler = $this->container->get($commandHandlerClass->get());
 
         $commandHandler->__invoke($command);

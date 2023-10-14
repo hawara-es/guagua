@@ -21,7 +21,7 @@ class QueryBus implements QueryBusInterface
 
     public function ask(QueryInterface $query): QueryResponseInterface
     {
-        $queryHandlerClass = $this->mapper->get($query->getQueryClass());
+        $queryHandlerClass = $this->mapper->get($query::class);
         $queryHandler = $this->container->get($queryHandlerClass->get());
 
         return $queryHandler->__invoke($query);

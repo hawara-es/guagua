@@ -16,7 +16,9 @@ class QueryMapper implements QueryMapperInterface
     public function __construct(array $maps)
     {
         foreach ($maps as $query => $handler) {
-            $this->maps[(new QueryClass($query))->get()] = new QueryHandlerClass($handler);
+            QueryClass::assertValidness($query);
+
+            $this->maps[$query] = new QueryHandlerClass($handler);
         }
     }
 

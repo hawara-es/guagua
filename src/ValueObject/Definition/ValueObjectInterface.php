@@ -10,5 +10,9 @@ interface ValueObjectInterface
 
     public function equals(ValueObjectInterface $other): bool;
 
+    public static function assertValidness(mixed $value): void;
+
+    public static function isValid(mixed $value): bool;
+
     public function __toString(): string;
 }

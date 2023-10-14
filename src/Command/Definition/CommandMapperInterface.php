@@ -9,7 +9,5 @@ use Guagua\ValueObject\CommandHandlerClass;
 
 interface CommandMapperInterface
 {
-    public function __construct(array $maps);
-
     public function get(CommandClass|string $command): ?CommandHandlerClass;
 }

@@ -17,6 +17,22 @@ abstract class ValueObjectAbstract implements ValueObjectInterface
             $other->get() === $this->get();
     }
 
+    public static function assertValidness(mixed $value): void
+    {
+        new static($value);
+    }
+
+    public static function isValid(mixed $value): bool
+    {
+        try {
+            self::assertValidness($value);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function __toString(): string
     {
         return (string) $this->get();

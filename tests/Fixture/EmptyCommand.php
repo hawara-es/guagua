@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixture;
 
-use Guagua\Command\Definition\CommandAbstract;
+use Guagua\Command\Definition\CommandInterface;
 
-class EmptyCommand extends CommandAbstract
+class EmptyCommand implements CommandInterface
 {
     //
 }

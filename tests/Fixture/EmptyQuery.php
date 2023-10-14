@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixture;
 
-use Guagua\Query\Definition\QueryAbstract;
+use Guagua\Query\Definition\QueryInterface;
 
-class EmptyQuery extends QueryAbstract
+class EmptyQuery implements QueryInterface
 {
     //
 }

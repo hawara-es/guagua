@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Guagua\ValueObject;
 
+use Guagua\ValueObject\Definition\ValueObjectAbstract;
 use Guagua\ValueObject\Exception\UuidIsNotValidException;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
-class Uuid
+class Uuid extends ValueObjectAbstract
 {
     public function __construct(
         private string $uuid

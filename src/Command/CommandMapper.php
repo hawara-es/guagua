@@ -16,7 +16,9 @@ class CommandMapper implements CommandMapperInterface
     public function __construct(array $maps = [])
     {
         foreach ($maps as $command => $handler) {
-            $this->maps[(new CommandClass($command))->get()] = new CommandHandlerClass($handler);
+            CommandClass::assertValidness($command);
+
+            $this->maps[$command] = new CommandHandlerClass($handler);
         }
     }
 
