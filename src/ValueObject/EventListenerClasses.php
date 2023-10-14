@@ -16,7 +16,7 @@ class EventListenerClasses extends ValueObjectAbstract
         foreach ($listeners as $listener) {
             EventListenerClass::assertValidness($listener);
 
-            $listeners[] = $listener;
+            $this->listeners[] = $listener;
         }
     }
 

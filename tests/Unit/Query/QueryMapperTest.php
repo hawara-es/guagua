@@ -25,20 +25,18 @@ it('can store a map from a query to its handler', function (string $query, strin
     ],
 ]);
 
-it('can retrieve a map from the query class value object', function (string $query, string $handler) {
+it('can retrieve a map from the query class value object', function (QueryClass $query, string $handler) {
 
     $mapper = new QueryMapper([
-        $query => $handler,
+        $query->get() => $handler,
     ]);
 
-    $queryAsValueObject = new QueryClass($query);
-
-    expect($mapper->get($queryAsValueObject)->get())
+    expect($mapper->get($query)->get())
         ->toBe($handler);
 
 })->with([
     [
-        EmptyQuery::class,
+        new QueryClass(EmptyQuery::class),
         EmptyQueryHandler::class,
     ],
 ]);

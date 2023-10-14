@@ -25,20 +25,18 @@ it('can store a map from a command to its handler', function (string $command, s
     ],
 ]);
 
-it('can retrieve a map from the command class value object', function (string $command, string $handler) {
+it('can retrieve a map from the command class value object', function (CommandClass $command, string $handler) {
 
     $mapper = new CommandMapper([
-        $command => $handler,
+        $command->get() => $handler,
     ]);
 
-    $commandAsValueObject = new CommandClass($command);
-
-    expect($mapper->get($commandAsValueObject)->get())
+    expect($mapper->get($command)->get())
         ->toBe($handler);
 
 })->with([
     [
-        EmptyCommand::class,
+        new CommandClass(EmptyCommand::class),
         EmptyCommandHandler::class,
     ],
 ]);

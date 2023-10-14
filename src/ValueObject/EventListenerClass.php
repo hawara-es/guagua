@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guagua\ValueObject;
 
+use Guagua\Event\Definition\EventListenerInterface;
 use Guagua\ValueObject\Definition\ValueObjectAbstract;
 use Guagua\ValueObject\Exception\EventListenerClassIsNotValidException;
 

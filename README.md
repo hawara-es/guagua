@@ -207,7 +207,8 @@ class WriteLogOnUserCreatedEvent implements EventListenerInterface
         //
     }
 
-    public function __invoke(UserCreatedEvent $event): void
+    /** @param  UserCreatedEvent  $event */
+    public function __invoke(EventInterface $event): void
     {
         $this->logger->write('A new user has just been created: '.$event->userId);
     }

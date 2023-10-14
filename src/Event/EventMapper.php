@@ -17,9 +17,8 @@ class EventMapper implements EventMapperInterface
     {
         foreach ($maps as $event => $listeners) {
             EventClass::assertValidness($event);
-            EventListenerClasses::assertValidness($listeners);
 
-            $this->maps[$event] = $listeners;
+            $this->maps[$event] = new EventListenerClasses($listeners);
         }
     }
 
