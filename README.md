@@ -243,7 +243,9 @@ class MyEventMapper extends EventMapper
 
 ## Instancer
 
-Finally, you can easily make the instancer use your mappers every time a service needs a command mapper, a query mapper or an event mapper by initializing it with your own solver.
+### Implementation solver
+
+Make the instancer use your mappers every time a service needs a command mapper, a query mapper or an event mapper by initializing it with your own implementation solver.
 
 ```php
 use Guagua\Instancer\ImplementationSolver;
@@ -259,6 +261,10 @@ $solver = new ImplementationSolver([
 
 $instancer = new Guagua\Instancer\Instancer($solver);
 ```
+
+> **See**: [ImplementationSolver.php](src/Instancer/ImplementationSolver.php)
+
+### Instancer
 
 Now you can use the instancer to get a command bus that knows about your commands and their handlers.
 
