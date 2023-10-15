@@ -1,9 +1,9 @@
 <?php
 
-use Guagua\Event\Exception\EventIsNotMappedException;
 use Guagua\Event\EventMapper;
-use Guagua\ValueObject\Exception\EventClassIsNotValidException;
+use Guagua\Event\Exception\EventIsNotMappedException;
 use Guagua\ValueObject\EventClass;
+use Guagua\ValueObject\Exception\EventClassIsNotValidException;
 use Tests\Fixture\DoNothingOnEmptyEvent;
 use Tests\Fixture\EmptyEvent;
 

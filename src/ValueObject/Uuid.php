@@ -13,7 +13,7 @@ class Uuid extends ValueObjectAbstract
     public function __construct(
         private string $uuid
     ) {
-        if(! RamseyUuid::isValid($uuid)) {
+        if (! RamseyUuid::isValid($uuid)) {
             throw new UuidIsNotValidException("The UUID ($uuid) is not valid");
         }
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guagua\Query;
 
-use Guagua\Container\QueryHandlerContainer;
+use Guagua\Container\Definition\QueryHandlerContainerInterface;
 use Guagua\Query\Definition\QueryBusInterface;
 use Guagua\Query\Definition\QueryInterface;
 use Guagua\Query\Definition\QueryMapperInterface;
@@ -14,7 +14,7 @@ class QueryBus implements QueryBusInterface
 {
     public function __construct(
         private QueryMapperInterface $mapper,
-        private QueryHandlerContainer $container
+        private QueryHandlerContainerInterface $container
     ) {
         //
     }
