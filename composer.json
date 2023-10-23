@@ -20,14 +20,19 @@
     ],
     "require": {
         "psr/container": "^2.0",
-        "ramsey/uuid": "^4.7"
+        "ramsey/uuid": "^4.7",
+        "hawara/criba": "^1.0"
     },
     "require-dev": {
         "pestphp/pest": "^2.23",
         "psy/psysh": "^0.11.21",
         "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",
-        "pestphp/pest-plugin-faker": "^2.0"
+        "pestphp/pest-plugin-faker": "^2.0",
+        "illuminate/database": "^10.28"
+    },
+    "suggest": {
+        "illuminate/database": "Allows using Eloquent to store and retrieve asynchronous commands and events."
     },
     "config": {
         "allow-plugins": {

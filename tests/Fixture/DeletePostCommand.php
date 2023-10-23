@@ -7,12 +7,15 @@ namespace Tests\Fixture;
 use Guagua\Command\Definition\CommandInterface;
 use Guagua\ValueObject\Uuid;
 
-class EmptyCommand implements CommandInterface
+class DeletePostCommand implements CommandInterface
 {
     private Uuid $commandId;
 
-    public function __construct()
-    {
+    public function __construct(
+        public readonly string $postId
+    ) {
+        Uuid::assertValidness($postId);
+
         $this->commandId = Uuid::random();
     }
 

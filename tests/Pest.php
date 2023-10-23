@@ -1,5 +1,7 @@
 <?php
 
+use Tests\EloquentTestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,4 +13,4 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Unit');
+uses(EloquentTestCase::class)->in('Unit');
